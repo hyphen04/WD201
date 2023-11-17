@@ -1,16 +1,15 @@
 {
-  
-  "name": "todo-app",
-  "version": "1.0.0",
-  "main": "index.js",
   "dependencies": {
     "express": "^4.18.2",
     "pg": "^8.11.3",
     "sequelize": "^6.35.0"
   },
+  "name": "todo-app",
+  "version": "1.0.0",
+  "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "test": "NODE_ENV=test jest --detectOpenHandles"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
