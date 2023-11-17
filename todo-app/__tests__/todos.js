@@ -72,24 +72,30 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    const response = await agent.post("/todos").send({
-      title: "Buy milk",
+    // Create a test todo to be deleted
+    const newTodo = await agent.post("/todos").send({
+      title: "Test Todo",
       dueDate: new Date().toISOString(),
       completed: false,
     });
-    const parsedResponse = JSON.parse(response.text);
-    const todoID = parsedResponse.id;
-
-    const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
-
-    expect(deleteResponse.statusCode).toBe(200);
-    expect(deleteResponse.header["content-type"]).toBe(
-      "application/json; charset=utf-8"
-    );
-    const parsedDeleteResponse = JSON.parse(deleteResponse.text);
-
-    expect(parsedDeleteResponse.success).toBe("Todo deleted");
-
-
-    });
+  
+    const todoID = newTodo.body.id;
+  
+    // Send a DELETE request to delete the created todo
+    const response = await agent.delete(`/todos/${todoID}`);
+  
+    // Check the status code to ensure the request was successful
+    expect(response.status).toBe(200);
+  
+    // Parse the response body to check the boolean value
+    const isDeleted = response.body;
+  
+    // Assert that the response is a boolean indicating successful deletion
+    expect(typeof isDeleted).toBe('boolean');
+  
+    // Assert based on your expectations, assuming the API returns true for successful deletion
+    expect(isDeleted).toBe(true);
+    // If the API returns false when the todo doesn't exist, you might add another expectation here
+  });
+  
 });
