@@ -83,12 +83,13 @@ describe("Todo Application", function () {
     const deleteResponse = await agent.delete(`/todos/${todoIdToDelete}`).send();
   
 
-    expect([200, 404]).toContain(deleteResponse.statusCode);
-  
+    expect(deleteResponse.statusCode).toBe(200);
 
-    if (deleteResponse.statusCode === 200) {
-      expect(deleteResponse.text).toBe('');
-    }
-  });
-  
+    // Verify the response to ensure it's a success message indicating successful deletion
+    const successMessage = deleteResponse.text;
+
+    // Assert that the response is a success message indicating successful deletion
+    expect(successMessage).toBe('{"success":"Todo deleted"}');
+    
+    });
 });
