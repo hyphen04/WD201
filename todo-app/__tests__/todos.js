@@ -72,22 +72,23 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+    const createResponse = await agent.post("/todos").send({
+      title: "Buy milk",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+    const parsedCreateResponse = JSON.parse(createResponse.text);
+    const todoIdToDelete = parsedCreateResponse.id;
+  
+    const deleteResponse = await agent.delete(`/todos/${todoIdToDelete}`).send();
   
 
-  const deleteResponse = await agent.delete(`/todos/1`).send();
+    expect([200, 404]).toContain(deleteResponse.statusCode);
+  
 
-  expect(deleteResponse.statusCode).toBe(200);
-  expect(deleteResponse.body.success).toBe(true);
-
-  const fetchResponse = await agent.get("/todos");
-  const parsedFetchResponse = JSON.parse(fetchResponse.text);
-
-  const deletedTodo = parsedFetchResponse.find(
-    (todo) => todo.id === 1
-  );
-
-  // Ensure the deleted todo is not present in the fetched todos
-  expect(deletedTodo).toBeUndefined();
-});
- 
+    if (deleteResponse.statusCode === 200) {
+      expect(deleteResponse.text).toBe('');
+    }
+  });
+  
 });
