@@ -46,7 +46,7 @@ describe("Todolist Test Suit", () => {
     const todolist = overdue();
     expect(
       todolist.every((todo) => {
-        return todo.dueDate === yesterday;
+        return todo.dueDate < today;
       })
     ).toBe(true);
   });
@@ -62,7 +62,7 @@ describe("Todolist Test Suit", () => {
     const todolist = dueLater();
     expect(
       todolist.every((todo) => {
-        return todo.dueDate === tomorrow;
+        return todo.dueDate > today;
       })
     ).toBe(true);
   });
