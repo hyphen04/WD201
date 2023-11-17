@@ -1,23 +1,26 @@
 const todoList = () => {
   const all = [];
 
-  let today = new Date().toLocaleDateString("en-CA");
   const add = (todoItem) => {
     all.push(todoItem);
   };
+
   const markAsComplete = (index) => {
     all[index].completed = true;
   };
 
   const overdue = () => {
+    const today = new Date().toLocaleDateString("en-CA");
     return all.filter((item) => item.dueDate < today);
   };
 
   const dueToday = () => {
+    const today = new Date().toLocaleDateString("en-CA");
     return all.filter((item) => item.dueDate === today);
   };
 
   const dueLater = () => {
+    const today = new Date().toLocaleDateString("en-CA");
     return all.filter((item) => item.dueDate > today);
   };
 
