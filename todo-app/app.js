@@ -62,7 +62,7 @@ app.delete("/todos/:id", async function (request, response) {
       return response.status(404).json({ error: "Todo not found" });
     }
     await todo.destroy();
-    return response.json({ success: true });
+    return response.status(200).json({ success: "Todo deleted" });
   } catch (error) {
     console.log(error);
     return response.status(500).json({ error: "Internal Server Error" });
