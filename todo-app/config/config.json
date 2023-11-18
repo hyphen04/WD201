@@ -14,10 +14,7 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "wd201_jx6q_user",
-    "password": "FvHF0KDKCFuAinzkOSoSO6Cf1mnBYThz",
-    "database": "wd201_jx6q",
-    "host": "dpg-clbldpjmot1c73asji50-a.oregon-postgres.render.com",
+    "use_env_variable": "DATABASE_URL",
     "dialect": "postgres"
   }
 }
