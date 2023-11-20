@@ -1,17 +1,30 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const { Todo } = require("./models");
 
 const bodyParser = require("body-parser");
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")))
 
 app.set("view engine", "ejs")
 
+
 app.get("/", async (request, response) =>  {
   const allTodos = await Todo.findAll();
+  const today = new Date();
+  const formattedDate = formatDate(today);
+
   if(request.accepts("html")) {
-    response.render("index", {allTodos});
+    response.render("index", { allTodos, formattedDate });
   }else {
     response.json(allTodos);
   }
@@ -43,8 +56,12 @@ app.get("/todos/:id", async function (request, response) {
 
 app.post("/todos", async function (request, response) {
   try {
-    const todo = await Todo.create(request.body);
-    return response.json(todo);
+    console.log();
+    await Todo.addTodo({
+      title: request.body.title,
+      dueDate: request.body.dueDate,
+  });
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json({ error: "Unprocessable Entity" });
@@ -65,7 +82,7 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
   }
 });
 
-const { Todo } = require("./models");
+
 
 app.delete("/todos/:id", async function (request, response) {
   const todoId = request.params.id;
