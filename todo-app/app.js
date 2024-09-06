@@ -7,29 +7,29 @@ const bodyParser = require("body-parser");
 
 function formatDate(date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "public")));
 
-app.set("view engine", "ejs")
+app.set("view engine", "ejs");
 
+app.use(express.urlencoded({ extended: false }));
 
-app.get("/", async (request, response) =>  {
+app.get("/", async (request, response) => {
   const allTodos = await Todo.findAll();
   const today = new Date();
   const formattedDate = formatDate(today);
 
-  if(request.accepts("html")) {
+  if (request.accepts("html")) {
     response.render("index", { allTodos, formattedDate });
-  }else {
+  } else {
     response.json(allTodos);
   }
-  
-})
+});
 
 app.get("/todos", async function (_request, response) {
   try {
@@ -56,11 +56,11 @@ app.get("/todos/:id", async function (request, response) {
 
 app.post("/todos", async function (request, response) {
   try {
-    console.log();
     await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
-  });
+    });
+    console.log("object");
     return response.redirect("/");
   } catch (error) {
     console.log(error);
@@ -82,8 +82,6 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
   }
 });
 
-
-
 app.delete("/todos/:id", async function (request, response) {
   const todoId = request.params.id;
 
@@ -92,15 +90,14 @@ app.delete("/todos/:id", async function (request, response) {
 
     if (todo) {
       await todo.destroy();
-      response.send(true); 
+      response.send(true);
     } else {
-      response.send(false); 
+      response.send(false);
     }
   } catch (error) {
     console.error("Error deleting Todo:", error);
-    response.send(false); 
+    response.send(false);
   }
 });
-
 
 module.exports = app;
