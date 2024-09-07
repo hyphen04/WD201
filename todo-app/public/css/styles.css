@@ -1,14 +1,11 @@
 body {
   margin: 0px;
   font: black;
-  font-family: "Times New Roman", Times, serif;
+  font-family: sans-serif;
   background: white;
 
   width: 100vw;
   height: 400vw;
-
-  background-color: rgb(200, 224, 212);
-  background-size: 400% 400%;
   animation: gradient 10s ease infinite;
   height: 500vh;
 }
