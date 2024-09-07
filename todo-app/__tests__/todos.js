@@ -45,8 +45,9 @@ describe("Todo test suite ", () => {
     });
 
     const groupedTodosResponse = await agent
+      .get("/")
       .set("Accept", "application/json");
-    expect(groupedTodosResponse.statusCode).toBe(200);
+    expect(groupedTodosResponse.statusCode).toBe(200); // Ensure the response is successful
     const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
     const dueTodayCount = parsedGroupedResponse.dueToday.length;
     const latestTodo = parsedGroupedResponse.dueToday[dueTodayCount - 1];
@@ -59,7 +60,7 @@ describe("Todo test suite ", () => {
       _csrf: csrfToken,
       completed: status,
     });
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200); // Ensure the response is successful
     const parsedUpdateResponse = JSON.parse(response.text);
     expect(parsedUpdateResponse.completed).toBe(true);
   });
@@ -77,7 +78,7 @@ describe("Todo test suite ", () => {
     const groupedTodosResponse = await agent
       .get("/")
       .set("Accept", "application/json");
-    expect(groupedTodosResponse.statusCode).toBe(200);
+    expect(groupedTodosResponse.statusCode).toBe(200); // Ensure the response is successful
     const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
     const dueTodayCount = parsedGroupedResponse.dueToday.length;
     const latestTodo = parsedGroupedResponse.dueToday[dueTodayCount - 1];
@@ -88,7 +89,7 @@ describe("Todo test suite ", () => {
     const response = await agent.delete(`/todos/${latestTodo.id}`).send({
       _csrf: csrfToken,
     });
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(200); // Ensure the response is successful
     const parsedDeleteResponse = JSON.parse(response.text);
     expect(parsedDeleteResponse.success).toBe(true);
   });
