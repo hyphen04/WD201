@@ -1,8 +1,17 @@
-body {
+*{
     font-family: sans-serif;
-    background: white;
-    }
-    
-    .Todo-Item:hover .trash-icon{
-      display:block;
-    }
+}
+
+body{
+    padding: 10px;
+}
+.Todo-item:hover {
+    display:block ;
+
+}
+.trash-icon {
+    display: block;
+  }
+.colorred{
+    color:#9e2929;
+}
