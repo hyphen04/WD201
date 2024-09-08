@@ -11,7 +11,7 @@ const passport=require('passport');
 const connectEnsureLogin=require('connect-ensure-login');
 const session=require('express-session');
 const LocalStrategy=require('passport-local');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 
 const saltRounds=10;
 
@@ -146,11 +146,11 @@ app.post("/users",async (request,response)=>{
   if (request.body.firstName.length == 0) {
     request.flash("error", "First Name cant be empty");
     return response.redirect("/signup");
-  } 
+  }
   else if (request.body.email.length == 0) {
     request.flash("error", "Email cant be empty");
     return response.redirect("/signup");
-  } 
+  }
   else if (trimmedPassword.length == 0) {
     request.flash("error", "password cannot be empty");
     return response.redirect("/signup");
@@ -213,7 +213,7 @@ app.get("/", function (request, response) {
 });
 
 app.get("/todos", async function (_request, response) {
- 
+
   try {
     console.log("Processing list of all Todos ...");
     const todos = await Todo.findAll();
@@ -255,7 +255,7 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
       dueDate:request.body.dueDate,
       userId:request.user.id
     });
-    
+
     return response.redirect("/todos");
   } catch (error) {
     console.log(error);
@@ -287,7 +287,7 @@ app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (req
     console.log(error);
     return response.status(500).json(error);
   }
- 
+
 });
 
 module.exports = app;

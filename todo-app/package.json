@@ -9,13 +9,12 @@
     "build": "npm install && NODE_ENV=production npx sequelize-cli db:migrate",
     "pretest": "NODE_ENV=test npm run recreate-test-db",
     "recreate-test-db": "npx sequelize-cli db:migrate --env test && npx sequelize-cli db:seed:all --env test",
-    "test": "NODE_ENV=test  jest",
-    "prepare": "cd .. && husky install todo-app/.husky"
+    "test": "NODE_ENV=test  jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
