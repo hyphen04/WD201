@@ -10,17 +10,14 @@ const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const flash = require("connect-flash");
-const bcrypt = require("bcryptjs");
-
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 app.set("views", path.join(__dirname, "views"));
 app.use(flash());
 const { Todo, User } = require("./models");
-// eslint-disable-next-line no-unused-vars
 const todo = require("./models/todo");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
-//SET EJS AS VIEW ENGINE
 app.use(cookieParser("shh! some secrete string"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 app.set("view engine", "ejs");
@@ -28,7 +25,7 @@ app.use(
   session({
     secret: "my-super-secret-key-21728172615261562",
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000, //24hours
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
@@ -87,12 +84,12 @@ app.get("/", async (request, response) => {
 });
 
 app.get(
-  "/todo",
+  "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     const loggedInUser = request.user.id;
     const allTodos = await Todo.getTodos();
-    const overdue = await Todo.overdue(loggedInUser);
+    const overdue_items = await Todo.overdue(loggedInUser);
     const dueLater = await Todo.dueLater(loggedInUser);
     const dueToday = await Todo.dueToday(loggedInUser);
     const completedItems = await Todo.completedItems(loggedInUser);
@@ -100,14 +97,14 @@ app.get(
       response.render("todo", {
         title: "Todo Application",
         allTodos,
-        overdue,
+        overdue_items,
         dueToday,
         dueLater,
         completedItems,
         csrfToken: request.csrfToken(),
       });
     } else {
-      response.json({ overdue, dueToday, dueLater, completedItems });
+      response.json({ overdue_items, dueToday, dueLater, completedItems });
     }
   }
 );
@@ -145,7 +142,7 @@ app.post("/users", async (request, response) => {
       if (err) {
         console.log(err);
       }
-      response.redirect("/todo");
+      response.redirect("/todos");
     });
   } catch (error) {
     console.log(error);
@@ -164,7 +161,7 @@ app.post(
   }),
   function (request, response) {
     console.log(request.user);
-    response.redirect("/todo");
+    response.redirect("/todos");
   }
 );
 app.get("/signout", (request, response, next) => {
@@ -176,35 +173,25 @@ app.get("/signout", (request, response, next) => {
   });
 });
 
-app.get(
-  "/todos",
-  connectEnsureLogin.ensureLoggedIn(),
-  async (request, response) => {
-    // defining route to displaying message
-
-    console.log("Todo list");
-    try {
-      const todoslist = await Todo.findAll();
-      return response.json(todoslist);
-    } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
-    }
+app.get("/todos", async (request, response) => {
+  console.log("Todo list");
+  try {
+    const todoslist = await Todo.findAll();
+    return response.json(todoslist);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
   }
-);
-app.get(
-  "/todos/:id",
-  connectEnsureLogin.ensureLoggedIn(),
-  async function (request, response) {
-    try {
-      const todo = await Todo.findByPk(request.params.id);
-      return response.json(todo);
-    } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
-    }
+});
+app.get("/todos/:id", async function (request, response) {
+  try {
+    const todo = await Todo.findByPk(request.params.id);
+    return response.json(todo);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
   }
-);
+});
 
 app.post(
   "/todos",
@@ -212,29 +199,28 @@ app.post(
   async (request, response) => {
     if (request.body.title.length == 0) {
       request.flash("error", "Title can not be empty!");
-      return response.redirect("/todo");
+      return response.redirect("/todos");
     }
     if (request.body.dueDate.length == 0) {
       request.flash("error", "Due date can not be empty!");
-      return response.redirect("/todo");
+      return response.redirect("/todos");
     }
     console.log("creating new todo", request.body);
     try {
-      // eslint-disable-next-line no-unused-vars
       await Todo.addTodo({
         title: request.body.title,
         dueDate: request.body.dueDate,
         completed: false,
         userId: request.user.id,
       });
-      return response.redirect("/todo");
+      return response.redirect("/todos");
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);
     }
   }
 );
-//PUT https://mytodoapp.com/todos/123/markAscomplete
+
 app.put(
   "/todos/:id",
   connectEnsureLogin.ensureLoggedIn(),
@@ -271,7 +257,7 @@ app.delete(
     console.log("delete a todo with ID:", request.params.id);
     try {
       await Todo.remove(request.params.id, request.user.id);
-      return response.json({ success: true });
+      return response.json(true);
     } catch (error) {
       return response.status(422).json(error);
     }

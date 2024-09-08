@@ -3,23 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta name="csrf-token" content="<%= csrfToken %>" />
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link href="./css/styles.css" rel="stylesheet" />
+    <title>TODO-Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Todo App</title>
+    <link href="./css/styles.css" rel="stylesheet" />
     <script>
       var token = document
-        .querySelector("meta[name='csrf-token']")
+        .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
       const updateTodo = (id) => {
         const bool = document.querySelector(`#checkbox-${id}`).checked;
         console.log(bool);
         fetch(`/todos/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          method: "put",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             _csrf: token,
             completed: bool,
@@ -30,14 +29,12 @@
               window.location.reload();
             }
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch((err) => console.erroe(err));
       };
       function deleteTodo(id) {
         fetch(`/todos/${id}`, {
           method: "delete",
-          headers: { "Content-type": "application/json" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             _csrf: token,
           }),
@@ -47,62 +44,53 @@
               window.location.reload();
             }
           })
-          .catch((error) => console.error(error));
+          .catch((err) => console.erroe(err));
       }
     </script>
   </head>
   <body>
-    <div class="grid grid-cols-6 pt-10">
+    <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
-        <%- include ('header.ejs') %>
-        <a
-          href="/signout"
-          class="bg-red-600 text-white px-4 py-1 rounded font-medium mr-2 mb-2"
-        >
-          Signout</a
-        >
+        <%- include("header.ejs") %>
+        <a href="/signout" style="color: blue; text-decoration: underline;"> Signout Account</a>
         <form action="/todos" method="post">
-          <input
-            type="hidden"
-            name="_csrf"
-            value="<%= csrfToken %>"
-            id="csrfToken"
-          />
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <div class="flex gap-2 py-4">
             <div class="flex-auto">
               <input
                 type="text"
                 name="title"
-                placeholder="What's next?"
-                class="border border-gray-500 rounded text-gray-700 w-full p-2 text-sm"
-                required
+                placeholder="what's next"
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
               />
             </div>
             <div class="flex-auto">
               <input
                 type="date"
                 name="dueDate"
-                class="border border-gray-400 rounded text-gray-800 w-full p-2 text-sm leading-4"
-                required
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
               />
             </div>
             <div class="flex-none">
               <button
                 type="submit"
-                class="bg-green-500 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
+                class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
               >
-                Add
+              Add
               </button>
             </div>
           </div>
         </form>
-
-        <%- include('todos.ejs', { title: "Overdue", data: overdue,
-        ID:"count-overdue" }) %> <%- include('todos.ejs', { title: "Due Today",
-        data: dueToday, ID:"count-due-today" }) %> <%- include('todos.ejs', {
-        title: "Due Later", data: dueLater, ID:"count-due-later" }) %> <%-
-        include('todos.ejs', { title: "Completed Items", data: completedItems,
-        ID:"count-completed" }) %>
+        <%- include('todos.ejs', {title: "Overdue", data: overdue_items}) %> <%-
+        include('todos.ejs', {title: "Due Today", data: dueToday}) %> <%-
+        include('todos.ejs', {title: "Due Later", data: dueLater}) %> <%-
+        include('todos.ejs', {title: "Completed Items", data: completedItems})
+        %>
+        <% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+            <p class="bg-red-200 my-3 list-none rounded px-4 py-2"><%= messages.error[i] %></p>
+          <% } %>
+        <% } %>
       </div>
     </div>
   </body>
