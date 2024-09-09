@@ -31,7 +31,7 @@ app.use(
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
     },
-  }),
+  })
 );
 
 app.use(passport.initialize());
@@ -62,8 +62,8 @@ passport.use(
             message: "Account doesn't exist for this mail",
           });
         });
-    },
-  ),
+    }
+  )
 );
 
 passport.serializeUser((user, done) => {
@@ -120,7 +120,7 @@ app.get(
     } else {
       response.json({ overdue, dueLater, dueToday, completedItems });
     }
-  },
+  }
 );
 
 app.get("/signup", (request, response) => {
@@ -176,10 +176,9 @@ app.post(
     failureFlash: true,
   }),
   (request, response) => {
-    // Authentication was successful, redirect to /todos
     console.log(request.user);
     response.redirect("/todos");
-  },
+  }
 );
 
 app.get("/signout", (request, response, next) => {
@@ -239,7 +238,7 @@ app.post(
       console.log(error);
       return response.status(422).json(error);
     }
-  },
+  }
 );
 
 app.put(
@@ -250,14 +249,14 @@ app.put(
     const todo = await Todo.findByPk(request.params.id);
     try {
       const updatedtodo = await todo.setCompletionStatus(
-        request.body.completed,
+        request.body.completed
       );
       return response.json(updatedtodo);
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);
     }
-  },
+  }
 );
 
 app.put("/todos/:id/markAsCompleted", async (request, response) => {
@@ -285,6 +284,6 @@ app.delete(
     } catch (err) {
       return response.status(422).json(err);
     }
-  },
+  }
 );
 module.exports = app;
