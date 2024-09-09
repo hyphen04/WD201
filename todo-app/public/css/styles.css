@@ -1,17 +1,8 @@
-*{
-    font-family: sans-serif;
-}
-
-body{
-    padding: 10px;
-}
-.Todo-item:hover {
-    display:block ;
+body {
+    background-color: white ;
 
 }
-.trash-icon {
-    display: block;
-  }
-.colorred{
-    color:#9e2929;
+
+.Todo-Item:hover .trash-ion {
+    display:block;
 }
