@@ -49,6 +49,7 @@ describe("Todo test suite", () => {
     res = await agent.get("/todos");
     expect(res.statusCode).toBe(302);
   });
+
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
     const agent = request.agent(server);
     await login(agent, "user.a@test.com", "12345678");
@@ -102,7 +103,7 @@ describe("Todo test suite", () => {
     let csrfToken = extractCsrfToken(res);
     // FILL IN YOUR CODE HERE
     await agent.post("/todos").send({
-      title: "Go Goa",
+      title: "Go to movie",
       dueDate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
